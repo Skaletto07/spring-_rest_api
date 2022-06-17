@@ -2,11 +2,13 @@ package com.kostkin.spring.rest.controller;
 
 
 import com.kostkin.spring.rest.entity.Employee;
+import com.kostkin.spring.rest.exeption_handling.EmployeeIncorrectData;
+import com.kostkin.spring.rest.exeption_handling.NoSuchEmployeeException;
 import com.kostkin.spring.rest.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +25,13 @@ public class MyRESTController {
         return allEmployees;
     }
 
+    @GetMapping("/employees/{id}")
+    public Employee getEmployee(@PathVariable int id) {
+        Employee employee = employeeService.getEmployee(id);
+        if (employee == null) {
+            throw new NoSuchEmployeeException("There is no employee with ID = " + id + " in Database");
+        }
+        return employee;
+    }
 
 }
